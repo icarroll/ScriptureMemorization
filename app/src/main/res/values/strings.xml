@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ScriptureMemorization</string>
+    <string name="speech_instruction">Tap microphone to begin recitation test</string>
 </resources>
