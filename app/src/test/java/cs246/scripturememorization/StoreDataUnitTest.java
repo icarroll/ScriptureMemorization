@@ -1,5 +1,9 @@
 package cs246.scripturememorization;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
 import org.junit.Test;
 
 import java.io.File;
@@ -66,5 +70,4 @@ public class StoreDataUnitTest {
 
 
     }
-
 }
