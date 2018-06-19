@@ -22,10 +22,12 @@ public class Scripture implements Parcelable{
         chapter = in.readString();
         verse = in.readString();
         text = in.readString();
-        if (in.readInt() == 1)
+        if (in.readInt() == 1) {
             memorized = true;
-        else
+        }
+        else {
             memorized = false;
+        }
         dateMemorized = new Date(in.readString());
         lastReviewed = new Date(in.readString());
         percentCorrect = in.readInt();
@@ -84,10 +86,12 @@ public class Scripture implements Parcelable{
         dest.writeString(chapter);
         dest.writeString(verse);
         dest.writeString(text);
-        if (memorized)
+        if (memorized) {
             dest.writeInt(1);
-        else
+        }
+        else {
             dest.writeInt(0);
+        }
         dest.writeString(dateMemorized.toString());
         dest.writeString(lastReviewed.toString());
         dest.writeInt(percentCorrect);
