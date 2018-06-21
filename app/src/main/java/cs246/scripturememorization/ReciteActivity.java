@@ -15,12 +15,12 @@ public class ReciteActivity extends AppCompatActivity {
         Intent scripture = getIntent();
 
         //
-        String ref = scripture.getStringExtra(MainActivity.REFERENCE);
-        String verse = scripture.getStringExtra(MainActivity.VERSE);
+//        String ref = scripture.getStringExtra(MainActivity.REFERENCE);
+//        String verse = scripture.getStringExtra(MainActivity.VERSE);
 
         //Set the textView to the reference.
         TextView thisReference = findViewById(R.id.scriptureReference);
-        thisReference.setText(verse);
+//        thisReference.setText(verse);
     }
 
 
