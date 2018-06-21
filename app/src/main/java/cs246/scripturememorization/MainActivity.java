@@ -50,4 +50,24 @@ public class MainActivity extends AppCompatActivity {
         else
             Log.d("icecream", "result code not okay");
     }
+    /*
+    public static final String REFERENCE = "";
+    public static final String VERSE = "";
+
+
+    public void sendScripture(View view) {
+        //just a temporary method for testing the Intent to opening the recitation view
+        //send the text to match, and the verse reference.
+        Log.d("TEMP", "Sending reference and verse");
+
+        String reference = "2 Nephi 2:24";
+        String verse = "But behold, all things have been done in the wisdom of him who knoweth all things.";
+
+        Intent reciteIntent = new Intent(this,ReciteActivity.class);
+        reciteIntent.putExtra(REFERENCE,reference);
+        reciteIntent.putExtra(VERSE,verse);
+
+        startActivity(reciteIntent);
+    }
+    */
 }
