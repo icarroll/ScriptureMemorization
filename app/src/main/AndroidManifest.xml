@@ -16,9 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".testActivity"></activity>
         <activity android:name=".ReciteActivity" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />r
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
     </application>
