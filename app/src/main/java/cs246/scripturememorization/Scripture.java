@@ -28,9 +28,21 @@ public class Scripture implements Parcelable{
         else {
             memorized = false;
         }
-        dateMemorized = new Date(in.readString());
-        lastReviewed = new Date(in.readString());
         percentCorrect = in.readInt();
+        String temp = in.readString();
+        if (temp.equals("null")) {
+            dateMemorized = null;
+        }
+        else {
+            dateMemorized = new Date(temp);
+        }
+        temp = in.readString();
+        if (temp.equals("null")) {
+            lastReviewed = null;
+        }
+        else {
+            lastReviewed = new Date(temp);
+        }
     }
 
     public Scripture() {
@@ -38,7 +50,7 @@ public class Scripture implements Parcelable{
         book = "1 Nephi";
         chapter = "1";
         verse = "1";
-        text = "I Nephi, having been born of goodly parents";
+        text = "I, Nephi, having been born of goodly parents, therefore I was taught somewhat in all the learning of my father; and having seen many afflictions in the course of my days, nevertheless, having been highly favored of the Lord in all my days; yea, having had a great knowledge of the goodness and the mysteries of God, therefore I make a record of my proceedings in my days.";
         memorized = false;
         dateMemorized = null;
         lastReviewed = null;
@@ -92,8 +104,19 @@ public class Scripture implements Parcelable{
         else {
             dest.writeInt(0);
         }
-        dest.writeString(dateMemorized.toString());
-        dest.writeString(lastReviewed.toString());
         dest.writeInt(percentCorrect);
+        if (dateMemorized != null) {
+            dest.writeString(dateMemorized.toString());
+        }
+        else {
+            dest.writeString("null");
+        }
+
+        if (lastReviewed != null) {
+            dest.writeString(lastReviewed.toString());
+        }
+        else {
+            dest.writeString("null");
+        }
     }
 }
