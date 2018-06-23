@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Date;
+
 public class testActivity extends AppCompatActivity {
 
     private Scripture s;
@@ -16,13 +18,10 @@ public class testActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         Intent intent = getIntent();
-        s = intent.getParcelableExtra("Scripture");
+        s = new Scripture();//intent.getParcelableExtra("Scripture");
         TextView text = findViewById(R.id.textView2);
         text.setText(s.toString());
-        text = findViewById(R.id.textView3);
-        text.setText(s.dateMemorized.toString());
-        text = findViewById(R.id.textView4);
-        text.setText(s.lastReviewed.toString());
+
 
         Button button  = findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
