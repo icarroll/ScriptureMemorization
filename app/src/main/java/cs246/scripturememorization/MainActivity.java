@@ -1,6 +1,8 @@
 package cs246.scripturememorization;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,12 +10,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView scriptureMemorized;
     private ImageView scriptureMemorizedSticker;
     private ArrayAdapter<Scripture> scriptureAdapter;
+    private Gson _gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +49,36 @@ public class MainActivity extends AppCompatActivity {
         scriptureAdapter = new ArrayAdapter<Scripture>(this, android.R.layout.simple_list_item_1, scriptureList);
         ListView list = findViewById(R.id.list_scriptures);
         list.setAdapter(scriptureAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Scripture temp = scripture;
+                scripture = scriptureList.get(position);
+                scriptureList.set(position, temp);
+                scriptureAdapter.notifyDataSetChanged();
+                //scriptureAdapter.remove(scripture);
+                //scriptureAdapter.add(temp);
+                updateScriptureView();
+            }
+        });
+        _gson = new Gson();
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        int sCount = pref.getInt("Scripture_Count", 0);
+        if (sCount > 0)
+            scripture = _gson.fromJson(pref.getString("s_" + 0, null ), Scripture.class);
+        for (int i = 1; i < sCount; i++)
+        {
+            Scripture s = _gson.fromJson(pref.getString("s_" + i, null ), Scripture.class);
+            if (s != null)
+                scriptureAdapter.add(s);
+        }
 
         Button button = findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Scripture s = new Scripture();
-                //s.dateMemorized = new Date();
-                //s.lastReviewed = new Date();
-                /*
-                Start activity for result, packs up scripture and sends it off
-                 */
-                //Intent intent = new Intent(MainActivity.this, testActivity.class);
-                //intent.putExtra("Scripture", s);
-                //startActivityForResult(intent, 2);
+
                 if (scripture != null) {
                     if (scripture.memorized) {
                         scripture.memorized = false;
@@ -73,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button buttonNew = findViewById(R.id.button3);
+        buttonNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (scripture != null) {
+                    scripture.lastReviewed = new Date();
+                    updateScriptureView();
+                    Log.d("icecream", "button2 pushed");
+                }
+            }
+        });
         updateScriptureView();
     }
 
@@ -115,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (!scriptureList.isEmpty()) {
             scripture = scriptureList.get(0);
-            scriptureList.remove(0);
+            scriptureAdapter.remove(scripture);
             updateScriptureView();
         } else {
             scripture = null;
@@ -177,6 +211,9 @@ public class MainActivity extends AppCompatActivity {
                         scripture.lastReviewed.getDay(),
                         scripture.lastReviewed.getYear()));
             }
+            else {
+                scriptureLastReviewed.setVisibility(View.INVISIBLE);
+            }
             if (scripture.dateMemorized != null) {
                 scriptureMemorized.setVisibility(View.VISIBLE);
                 scriptureMemorized.setText(String.format(Locale.ENGLISH,
@@ -184,6 +221,9 @@ public class MainActivity extends AppCompatActivity {
                         getMonth(scripture.dateMemorized.getMonth()),
                         scripture.dateMemorized.getDay(),
                         scripture.dateMemorized.getYear()));
+            }
+            else {
+                scriptureMemorized.setVisibility(View.INVISIBLE);
             }
             if (scripture.memorized) {
                 scriptureMemorizedSticker.setVisibility(View.VISIBLE);
@@ -193,6 +233,23 @@ public class MainActivity extends AppCompatActivity {
                 scriptureMemorized.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        if (scripture != null) {
+            editor.putInt("Scripture_Count", 1 + scriptureList.size());
+            editor.putString("s_0", _gson.toJson(scripture));
+            for (int i = 0; i < scriptureList.size(); i++) {
+                editor.putString("s_" + i, _gson.toJson(scriptureList.get(i)));
+            }
+        }
+        else
+            editor.putInt("Scripture_Count", 0);
+        editor.commit();
     }
 
     private String getMonth(int month)
