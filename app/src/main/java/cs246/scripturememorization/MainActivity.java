@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private Scripture scripture;
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         scriptureLastReviewed = findViewById(R.id.text_lastReviewed);
         scriptureMemorized = findViewById(R.id.text_memorized);
         scriptureMemorizedSticker = findViewById(R.id.image_Memorized);
-        scriptureAdapter = new ArrayAdapter<Scripture>(this, android.R.layout.simple_list_item_1, scriptureList);
+        scriptureAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, scriptureList);
         ListView list = findViewById(R.id.list_scriptures);
         list.setAdapter(scriptureAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 scripture = scriptureList.get(position);
                 scriptureList.set(position, temp);
                 scriptureAdapter.notifyDataSetChanged();
-                //scriptureAdapter.remove(scripture);
-                //scriptureAdapter.add(temp);
                 updateScriptureView();
             }
         });
@@ -108,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         updateScriptureView();
+
+        /*DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        List<String>books = databaseAccess.getBooks();
+        databaseAccess.close();
+
+        for (int i = 0; i < books.size(); i++) {
+            Log.d("icecream", books.get(i));
+        }*/
     }
 
     @Override
@@ -200,27 +206,19 @@ public class MainActivity extends AppCompatActivity {
             scriptureMemorizedSticker.setVisibility(View.INVISIBLE);
         }
         else {
-            scriptureReference.setText(String.format("%s %s:%s", scripture.book, scripture.chapter, scripture.verse));
+            scriptureReference.setText(sfHelper.getReference(scripture));
             scriptureText.setVisibility(View.VISIBLE);
             scriptureText.setText(scripture.text);
             if (scripture.lastReviewed != null) {
                 scriptureLastReviewed.setVisibility(View.VISIBLE);
-                scriptureLastReviewed.setText(String.format(Locale.ENGLISH,
-                        "Last Reviewed: %s %d, %d",
-                        getMonth(scripture.lastReviewed.getMonth()),
-                        scripture.lastReviewed.getDay(),
-                        scripture.lastReviewed.getYear()));
+                scriptureLastReviewed.setText(sfHelper.getDate(scripture.lastReviewed));
             }
             else {
                 scriptureLastReviewed.setVisibility(View.INVISIBLE);
             }
             if (scripture.dateMemorized != null) {
                 scriptureMemorized.setVisibility(View.VISIBLE);
-                scriptureMemorized.setText(String.format(Locale.ENGLISH,
-                        "Memorized: %s %d, %d",
-                        getMonth(scripture.dateMemorized.getMonth()),
-                        scripture.dateMemorized.getDay(),
-                        scripture.dateMemorized.getYear()));
+                scriptureMemorized.setText(sfHelper.getDate(scripture.dateMemorized));
             }
             else {
                 scriptureMemorized.setVisibility(View.INVISIBLE);
@@ -246,31 +244,8 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < scriptureList.size(); i++) {
                 editor.putString("s_" + i, _gson.toJson(scriptureList.get(i)));
             }
-        }
-        else
+        } else
             editor.putInt("Scripture_Count", 0);
-        editor.commit();
-    }
-
-    private String getMonth(int month)
-    {
-        switch (month) {
-            case 0:
-                return "Jan";
-            case 1:
-                return "Feb";
-            case 2:
-                return "Mar";
-            case 3:
-                return "Apr";
-            case 4:
-                return "May";
-            case 5:
-                return "Jun";
-            case 6:
-                return "July";
-            default:
-                return "Aug";
-        }
+        editor.apply();
     }
 }
