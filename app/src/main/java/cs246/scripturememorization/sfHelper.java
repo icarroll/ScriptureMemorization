@@ -16,7 +16,7 @@ public class sfHelper {
     }
 
     public static String getTextShort(Scripture s) {
-        int end = 45 > s.text.length() ? s.text.length() : 45;
+        int end = 35 > s.text.length() ? s.text.length() : 35;
         return s.text.substring(0,end) + "...";
     }
 

@@ -234,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements Main_RecyclerView
             }
             else {
                 scriptureMemorizedSticker.setImageResource(R.drawable.box);
-                scriptureMemorized.setVisibility(View.INVISIBLE);
             }
         }
     }
