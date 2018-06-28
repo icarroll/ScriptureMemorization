@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Main_RecyclerViewAdapter.ItemClickListener{
     private Scripture scripture;
     private List<Scripture> scriptureList;
     private TextView scriptureReference;
@@ -32,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView scriptureLastReviewed;
     private TextView scriptureMemorized;
     private ImageView scriptureMemorizedSticker;
-    private ArrayAdapter<Scripture> scriptureAdapter;
+    private Main_RecyclerViewAdapter scriptureAdapter;
     private Gson _gson;
+
+    private static final String TAG = "main_debug";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +50,15 @@ public class MainActivity extends AppCompatActivity {
         scriptureLastReviewed = findViewById(R.id.text_lastReviewed);
         scriptureMemorized = findViewById(R.id.text_memorized);
         scriptureMemorizedSticker = findViewById(R.id.image_Memorized);
-        scriptureAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, scriptureList);
-        ListView list = findViewById(R.id.list_scriptures);
-        list.setAdapter(scriptureAdapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Scripture temp = scripture;
-                scripture = scriptureList.get(position);
-                scriptureList.set(position, temp);
-                scriptureAdapter.notifyDataSetChanged();
-                updateScriptureView();
-            }
-        });
+        RecyclerView rv = findViewById(R.id.rv_scriptures);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        scriptureAdapter = new Main_RecyclerViewAdapter(this, scriptureList);
+        scriptureAdapter.setClickListener(this);
+        rv.setAdapter(scriptureAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
+                LinearLayoutManager.VERTICAL);
+        rv.addItemDecoration(dividerItemDecoration);
+
         _gson = new Gson();
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
@@ -67,10 +68,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 1; i < sCount; i++)
         {
             Scripture s = _gson.fromJson(pref.getString("s_" + i, null ), Scripture.class);
-            if (s != null)
-                scriptureAdapter.add(s);
+            if (s != null) {
+                scriptureList.add(s);
+            }
+            scriptureAdapter.notifyDataSetChanged();
         }
 
+        //buttons for testing last reviewed and passed off
         Button button = findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         scripture.dateMemorized = new Date();
                     }
                     updateScriptureView();
-                    Log.d("icecream", "button pushed");
+                    Log.d(TAG, "button pushed");
                 }
             }
         });
@@ -100,20 +104,20 @@ public class MainActivity extends AppCompatActivity {
                 if (scripture != null) {
                     scripture.lastReviewed = new Date();
                     updateScriptureView();
-                    Log.d("icecream", "button2 pushed");
+                    Log.d(TAG, "button2 pushed");
                 }
             }
         });
         updateScriptureView();
+    }
 
-        /*DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-        List<String>books = databaseAccess.getBooks();
-        databaseAccess.close();
-
-        for (int i = 0; i < books.size(); i++) {
-            Log.d("icecream", books.get(i));
-        }*/
+    @Override
+    public void onItemClick(View view, int position) {
+        Scripture temp = scripture;
+        scripture = scriptureList.get(position);
+        scriptureList.set(position, temp);
+        scriptureAdapter.notifyItemChanged(position);
+        updateScriptureView();
     }
 
     @Override
@@ -155,7 +159,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (!scriptureList.isEmpty()) {
             scripture = scriptureList.get(0);
-            scriptureAdapter.remove(scripture);
+            scriptureList.remove(0);
+            scriptureAdapter.notifyItemRemoved(0);
             updateScriptureView();
         } else {
             scripture = null;
@@ -183,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
             if (scripture == null) {
                 scripture = s;
             } else {
-                scriptureAdapter.add(scripture);
+                scriptureList.add(0, scripture);
+                scriptureAdapter.notifyItemInserted(0);
                 scripture = s;
             }
             updateScriptureView();
@@ -192,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             scripture = data.getParcelableExtra("Scripture");
             updateScriptureView();
         } else {
-            Log.d("icecream", "result code not okay");
+            Log.e(TAG, "result code not okay");
         }
     }
 
@@ -211,23 +217,23 @@ public class MainActivity extends AppCompatActivity {
             scriptureText.setText(scripture.text);
             if (scripture.lastReviewed != null) {
                 scriptureLastReviewed.setVisibility(View.VISIBLE);
-                scriptureLastReviewed.setText(sfHelper.getDate(scripture.lastReviewed));
+                scriptureLastReviewed.setText(sfHelper.getDateReviewed(scripture.lastReviewed));
             }
             else {
                 scriptureLastReviewed.setVisibility(View.INVISIBLE);
             }
             if (scripture.dateMemorized != null) {
                 scriptureMemorized.setVisibility(View.VISIBLE);
-                scriptureMemorized.setText(sfHelper.getDate(scripture.dateMemorized));
+                scriptureMemorized.setText( sfHelper.getDateMemorized(scripture.dateMemorized));
             }
             else {
                 scriptureMemorized.setVisibility(View.INVISIBLE);
             }
             if (scripture.memorized) {
-                scriptureMemorizedSticker.setVisibility(View.VISIBLE);
+                scriptureMemorizedSticker.setImageResource(R.drawable.check);
             }
             else {
-                scriptureMemorizedSticker.setVisibility(View.INVISIBLE);
+                scriptureMemorizedSticker.setImageResource(R.drawable.box);
                 scriptureMemorized.setVisibility(View.INVISIBLE);
             }
         }
@@ -238,11 +244,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
         if (scripture != null) {
             editor.putInt("Scripture_Count", 1 + scriptureList.size());
             editor.putString("s_0", _gson.toJson(scripture));
             for (int i = 0; i < scriptureList.size(); i++) {
-                editor.putString("s_" + i, _gson.toJson(scriptureList.get(i)));
+                editor.putString("s_" + (i + 1), _gson.toJson(scriptureList.get(i)));
             }
         } else
             editor.putInt("Scripture_Count", 0);

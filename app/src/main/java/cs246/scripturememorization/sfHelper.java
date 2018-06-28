@@ -15,6 +15,19 @@ public class sfHelper {
         return String.format("%s %s:%s", s.book, s.chapter, s.verse);
     }
 
+    public static String getTextShort(Scripture s) {
+        int end = 45 > s.text.length() ? s.text.length() : 45;
+        return s.text.substring(0,end) + "...";
+    }
+
+    public static String getDateReviewed(Date d) {
+        return String.format("Last Reviewed : %s", getDate(d));
+    }
+
+    public static String getDateMemorized(Date d) {
+        return String.format("Memorized : %s", getDate(d));
+    }
+
     public static String getDate(Date d) {
         SimpleDateFormat localDateFormat = new SimpleDateFormat("HH");
         boolean pm = false;
@@ -29,7 +42,7 @@ public class sfHelper {
         String time = temp + localMinuteFormat.format(d) + " ";
         time += (pm? "p.m." : "a.m.");
         return String.format(Locale.ENGLISH,
-                "Last Reviewed: %s %d, %d %s",
+                "%s %d, %d %s",
                 getMonth(d.getMonth()),
                 d.getDay(),
                 d.getYear() + 1900,
