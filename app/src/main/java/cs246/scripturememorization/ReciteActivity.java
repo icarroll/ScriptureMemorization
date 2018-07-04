@@ -19,6 +19,9 @@ public class ReciteActivity extends AppCompatActivity {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private final String tag = "ReciteActivity";
 
+//    ArrayList<String> recitedWords;
+
+    Scripture thisScripture = new Scripture();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,9 @@ public class ReciteActivity extends AppCompatActivity {
 
         Intent scripture = getIntent();
 
-//        String ref = scripture.getStringExtra(MainActivity.REFERENCE);
-//        String verse = scripture.getStringExtra(MainActivity.VERSE);
+        //This is here until we set the scripture coming in via the intent.
+        //Note that this scripture (Genesis 2:24) has been cleaned of punctuation.
+        thisScripture.text = "therefore shall a man leave his father and his mother and shall cleave unto his wife and they shall be one flesh";
 
         //Set the textView to the reference.
         TextView thisReference = findViewById(R.id.scriptureReference);
@@ -52,6 +56,42 @@ public class ReciteActivity extends AppCompatActivity {
         }
     }
 
+    public String[] splitSentence(String sentence) {
+
+        String[] wordSet;
+        wordSet = sentence.split(" ");
+        return wordSet;
+    }
+
+    /**
+     * compareRecitation Compares the recitation to the correct version. Attempts to do a little
+     * fuzzy logic to favor the recitation.
+     * @param scripture The actual contents of the scripture.
+     * @param recited The recited version of the scripture.
+     * @return Percentage of correct words.
+     */
+    private int compareRecitation(String scripture, String recited) {
+        String[] scriptureArray = scripture.split(" ");
+        String[] recitedArray = recited.split(" ");
+
+        int accurateCount = 0;
+
+        if(scriptureArray.length == recitedArray.length) {
+            //Simple word comparison
+            for(int s = 0; s < scriptureArray.length; s++) {
+                if(scriptureArray[s].equals(recitedArray[s])) {
+                    accurateCount++;
+                }
+            }
+        }else {
+            Log.d(tag,scriptureArray.length + " " + recitedArray.length);
+        }
+
+        float dec = accurateCount/scriptureArray.length;
+
+        return Math.round(accurateCount/scriptureArray.length * 100);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -60,12 +100,7 @@ public class ReciteActivity extends AppCompatActivity {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-                    for(int i = 0; i < result.size(); i++){
-                        Log.d(tag,result.get(i));
-                    }
-//                    mVoiceInputTv.setText(result.get(0));
-//                    Log.d(tag, result.get(0));
+                    Log.d(tag,"success rate: " + compareRecitation(thisScripture.text, result.get(0)) + "% ");
                 }
                 break;
             }
