@@ -21,7 +21,7 @@ public class ReciteActivity extends AppCompatActivity {
 
 //    ArrayList<String> recitedWords;
 
-    Scripture thisScripture = new Scripture();
+    Scripture thisScripture; // = new Scripture();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class ReciteActivity extends AppCompatActivity {
 
         //This is here until we set the scripture coming in via the intent.
         //Note that this scripture (Genesis 2:24) has been cleaned of punctuation.
-        thisScripture.text = "therefore shall a man leave his father and his mother and shall cleave unto his wife and they shall be one flesh";
+//        thisScripture.text = "therefore shall a man leave his father and his mother and shall cleave unto his wife and they shall be one flesh";
 
         //Set the textView to the reference.
         TextView thisReference = findViewById(R.id.scriptureReference);
@@ -87,7 +87,9 @@ public class ReciteActivity extends AppCompatActivity {
             Log.d(tag,scriptureArray.length + " " + recitedArray.length);
         }
 
-        float dec = accurateCount/scriptureArray.length;
+        float dec = (float)accurateCount/(float)scriptureArray.length;
+
+//        Log.d(tag,Float.toString(dec));
 
         return Math.round(accurateCount/scriptureArray.length * 100);
     }
