@@ -24,6 +24,7 @@ public class ReciteActivity extends AppCompatActivity {
     private final String tag = "ReciteActivity";
 
     Scripture thisScripture;
+    public boolean hasRecited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,21 @@ public class ReciteActivity extends AppCompatActivity {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
 
+        }
+    }
+
+    public void setPostFieldVisibility(){
+        TextView score = findViewById(R.id.postReciteScore);
+        TextView heardStatic = findViewById(R.id.heardStatic);
+        TextView heard = findViewById(R.id.postReciteText);
+        if(hasRecited) {
+            score.setVisibility(View.VISIBLE);
+            heardStatic.setVisibility(View.VISIBLE);
+            heard.setVisibility(View.VISIBLE);
+        }else{
+            score.setVisibility(View.INVISIBLE);
+            heardStatic.setVisibility(View.VISIBLE);
+            heard.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -100,6 +116,8 @@ public class ReciteActivity extends AppCompatActivity {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     compareRecitation(thisScripture.text, result.get(0));
                     setRecitationText(result.get(0));
+                    hasRecited = true;
+                    setPostFieldVisibility();
                 }
                 break;
             }
