@@ -19,7 +19,7 @@ public class VerseAdapter extends RecyclerView.Adapter<VerseAdapter.VerseAdapter
     private Context context;
 
     public interface VerseAdapterOnClickHandler {
-        void onClick(String verseUrl, String movieKey);
+        void onClick(String verseId, String verseKey);
     }
 
     public VerseAdapter(Context context, VerseAdapterOnClickHandler clickHandler) {
