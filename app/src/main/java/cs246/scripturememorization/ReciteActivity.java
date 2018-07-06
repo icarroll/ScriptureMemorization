@@ -13,30 +13,28 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+
 public class ReciteActivity extends AppCompatActivity {
 
     public boolean isRecording = false;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private final String tag = "ReciteActivity";
 
-//    ArrayList<String> recitedWords;
-
-    Scripture thisScripture; // = new Scripture();
+    Scripture thisScripture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speech);
 
-        Intent scripture = getIntent();
+        Intent intent = getIntent();
 
-        //This is here until we set the scripture coming in via the intent.
-        //Note that this scripture (Genesis 2:24) has been cleaned of punctuation.
-//        thisScripture.text = "therefore shall a man leave his father and his mother and shall cleave unto his wife and they shall be one flesh";
+        thisScripture = intent.getExtras().getParcelable("Scripture");
 
         //Set the textView to the reference.
         TextView thisReference = findViewById(R.id.scriptureReference);
-//        thisReference.setText(verse);
+        thisReference.setText(thisScripture.book + " " + thisScripture.chapter + ":" + thisScripture.verse);
     }
 
     public void microphoneButtonPress(View view) {
@@ -71,27 +69,11 @@ public class ReciteActivity extends AppCompatActivity {
      * @return Percentage of correct words.
      */
     private int compareRecitation(String scripture, String recited) {
-        String[] scriptureArray = scripture.split(" ");
-        String[] recitedArray = recited.split(" ");
+        Integer percentage = FuzzySearch.weightedRatio(scripture,recited);
 
-        int accurateCount = 0;
+        Log.d(tag,Integer.toString(percentage));
 
-        if(scriptureArray.length == recitedArray.length) {
-            //Simple word comparison
-            for(int s = 0; s < scriptureArray.length; s++) {
-                if(scriptureArray[s].equals(recitedArray[s])) {
-                    accurateCount++;
-                }
-            }
-        }else {
-            Log.d(tag,scriptureArray.length + " " + recitedArray.length);
-        }
-
-        float dec = (float)accurateCount/(float)scriptureArray.length;
-
-//        Log.d(tag,Float.toString(dec));
-
-        return Math.round(accurateCount/scriptureArray.length * 100);
+        return percentage;
     }
 
     @Override
