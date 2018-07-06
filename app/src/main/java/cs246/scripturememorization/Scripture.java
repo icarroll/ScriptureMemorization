@@ -5,22 +5,33 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
+/**
+ * This class holds a scripture, it's reference and it's verse id for looking it up in our database.
+ * It has been set-up to use the parcelable interface to be passed easily from activity to activity.
+ */
 public class Scripture implements Parcelable{
-    public String volume;
-    public String book;
-    public String chapter;
-    public String verse;
+    public String volume;       /** Old Testiment, new Testiment, etc... **/
+    public String book;         /** Genesis, Exodus, etc... **/
+    public int chapter;
+    public int verse;
+    public int verseID;         /** unique ID for scripture in database **/
     public String text;
     public boolean memorized;
     Date dateMemorized;
     Date lastReviewed;
     int percentCorrect;
 
+    /**
+     * Parcelable constructor - used to rebuild the scripture after being passed as an intent.
+     * @param in
+     */
+
     public Scripture(Parcel in) {
         volume = in.readString();
         book = in.readString();
-        chapter = in.readString();
-        verse = in.readString();
+        chapter = in.readInt();
+        verse = in.readInt();
+        verseID = in.readInt();
         text = in.readString();
         if (in.readInt() == 1) {
             memorized = true;
@@ -45,23 +56,36 @@ public class Scripture implements Parcelable{
         }
     }
 
+    /**
+     * Defaults to 1 Nephi 1:1
+     */
     public Scripture() {
         volume = "Book of Mormon";
         book = "1 Nephi";
-        chapter = "1";
-        verse = "1";
-        text = "I, Nephi, having been born of goodly parents, therefore I was taught somewhat in all the learning of my father; and having seen many afflictions in the course of my days, nevertheless, having been highly favored of the Lord in all my days; yea, having had a great knowledge of the goodness and the mysteries of God, therefore I make a record of my proceedings in my days.";
+        chapter = 1;
+        verse = 1;
+        verseID = 31103;
+        text = "I, Nephi having been born of goodly parents, therefore I was taught somewhat in all the learning of my father; and having seen many afflictions in the course of my days, nevertheless, having been highly favored of the Lord in all my days; yea, having had a great knowledge of the goodness and the mysteries of God, therefore I make a record of my proceedings in my days.";
         memorized = false;
         dateMemorized = null;
         lastReviewed = null;
         percentCorrect = 0;
     }
 
-    public Scripture(String volume, String book, String chapter, String verse, String text) {
+    /**
+     * Non-default constructor, for testing different scriptures.
+     * @param volume
+     * @param book
+     * @param chapter
+     * @param verse
+     * @param text
+     */
+    public Scripture(String volume, String book, int chapter, int verse, String text) {
         this.volume = volume;
         this.book = book;
         this.chapter = chapter;
         this.verse = verse;
+        this.verseID = 0;
         this.text = text;
         memorized = false;
         dateMemorized = null;
@@ -91,12 +115,18 @@ public class Scripture implements Parcelable{
         }
     };
 
+    /**
+     * Packs the scripture up to be passed in an intent.
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(volume);
         dest.writeString(book);
-        dest.writeString(chapter);
-        dest.writeString(verse);
+        dest.writeInt(chapter);
+        dest.writeInt(verse);
+        dest.writeInt(verseID);
         dest.writeString(text);
         if (memorized) {
             dest.writeInt(1);
