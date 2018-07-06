@@ -19,7 +19,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookAdapterVie
     private Context context;
 
     public interface BookAdapterOnClickHandler {
-        void onClick(String bookUrl, String movieKey);
+        void onClick(String bookId, String bookKey);
     }
 
     public BookAdapter(Context context, BookAdapterOnClickHandler clickHandler) {
