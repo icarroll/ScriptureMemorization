@@ -19,7 +19,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterA
     private Context context;
 
     public interface ChapterAdapterOnClickHandler {
-        void onClick(String chapterUrl, String movieKey);
+        void onClick(String String chapterId, String chapterKey);
     }
 
     public ChapterAdapter(Context context, ChapterAdapterOnClickHandler clickHandler) {
