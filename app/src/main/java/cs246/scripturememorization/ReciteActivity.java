@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -54,6 +56,11 @@ public class ReciteActivity extends AppCompatActivity {
         }
     }
 
+    public void setRecitationText(String text) {
+        TextView postReciteText = findViewById(R.id.postReciteText);
+        postReciteText.setText(text);
+    }
+
     public String[] splitSentence(String sentence) {
 
         String[] wordSet;
@@ -71,7 +78,8 @@ public class ReciteActivity extends AppCompatActivity {
     private int compareRecitation(String scripture, String recited) {
         Integer percentage = FuzzySearch.weightedRatio(scripture,recited);
 
-        Log.d(tag,Integer.toString(percentage));
+
+        Log.d(tag,"Returned Weighted Ratio of Accuracy:" + Integer.toString(percentage));
 
         return percentage;
     }
@@ -84,7 +92,8 @@ public class ReciteActivity extends AppCompatActivity {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    Log.d(tag,"success rate: " + compareRecitation(thisScripture.text, result.get(0)) + "% ");
+                    compareRecitation(thisScripture.text, result.get(0));
+                    setRecitationText(result.get(0));
                 }
                 break;
             }
