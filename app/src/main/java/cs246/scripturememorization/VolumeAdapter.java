@@ -19,7 +19,7 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.VolumeAdap
     private Context context;
 
     public interface VolumeAdapterOnClickHandler {
-        void onClick(String volumeUrl, String movieKey);
+        void onClick(String volumeId, String volumeKey);
     }
 
     public VolumeAdapter(Context context, VolumeAdapterOnClickHandler clickHandler) {
