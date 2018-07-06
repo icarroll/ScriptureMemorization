@@ -61,6 +61,12 @@ public class ReciteActivity extends AppCompatActivity {
         postReciteText.setText(text);
     }
 
+    public void setRecitationScore(String text) {
+        TextView postReciteText = findViewById(R.id.postReciteScore);
+        postReciteText.setText(text + "%");
+    }
+
+
     public String[] splitSentence(String sentence) {
 
         String[] wordSet;
@@ -78,7 +84,7 @@ public class ReciteActivity extends AppCompatActivity {
     private int compareRecitation(String scripture, String recited) {
         Integer percentage = FuzzySearch.weightedRatio(scripture,recited);
 
-
+        setRecitationScore(Integer.toString(percentage));
         Log.d(tag,"Returned Weighted Ratio of Accuracy:" + Integer.toString(percentage));
 
         return percentage;
