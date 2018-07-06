@@ -44,7 +44,7 @@ public class sfHelper {
         return String.format(Locale.ENGLISH,
                 "%s %d, %d %s",
                 getMonth(d.getMonth()),
-                d.getDay(),
+                d.getDate(),
                 d.getYear() + 1900,
                 time);
     }
