@@ -7,6 +7,7 @@ import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -61,15 +62,25 @@ public class ReciteActivity extends AppCompatActivity {
         TextView score = findViewById(R.id.postReciteScore);
         TextView heardStatic = findViewById(R.id.heardStatic);
         TextView heard = findViewById(R.id.postReciteText);
+        Button saveScore = findViewById(R.id.saveScore);
         if(hasRecited) {
             score.setVisibility(View.VISIBLE);
             heardStatic.setVisibility(View.VISIBLE);
             heard.setVisibility(View.VISIBLE);
+            saveScore.setVisibility(View.VISIBLE);
         }else{
             score.setVisibility(View.INVISIBLE);
             heardStatic.setVisibility(View.VISIBLE);
             heard.setVisibility(View.INVISIBLE);
+            saveScore.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void updateAndReturn(View view) {
+        Intent intent = new Intent ();
+        intent.putExtra("Scripture", thisScripture);
+        setResult(testActivity.RESULT_OK, intent);
+        finish();
     }
 
     public void setRecitationText(String text) {
@@ -98,10 +109,12 @@ public class ReciteActivity extends AppCompatActivity {
      * @return Percentage of correct words.
      */
     private int compareRecitation(String scripture, String recited) {
-        Integer percentage = FuzzySearch.weightedRatio(scripture,recited);
+//        Integer percentage = FuzzySearch.weightedRatio(scripture,recited);
+        Integer percentage = FuzzySearch.ratio(scripture,recited);
 
+        thisScripture.percentCorrect = percentage;
         setRecitationScore(Integer.toString(percentage));
-        Log.d(tag,"Returned Weighted Ratio of Accuracy:" + Integer.toString(percentage));
+        Log.d(tag,"Returned Simple Ratio of Accuracy:" + Integer.toString(percentage));
 
         return percentage;
     }
