@@ -4,4 +4,5 @@
     <string name="main_label_currentScripture">Current Scripture: </string>
     <string name="main_ScriptureDefaultText">No scripture selected please add a scripture</string>
     <string name="heardStaticContent">What we heard:</string>
+    <string name="saveAndReturn">Save score and Return</string>
 </resources>

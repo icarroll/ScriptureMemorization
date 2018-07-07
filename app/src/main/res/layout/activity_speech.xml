@@ -54,17 +54,21 @@
 
     <TextView
         android:id="@+id/postReciteText"
-        android:layout_width="297dp"
-        android:layout_height="84dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:gravity="top|left"
         android:text="TextView"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="italic"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/microphoneButton"
+        app:layout_constraintBottom_toTopOf="@+id/saveScore"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,5 +106,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postReciteScore"
         tools:text="@string/heardStaticContent" />
+
+    <Button
+        android:id="@+id/saveScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:onClick="updateAndReturn"
+        android:text="@string/saveAndReturn"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/microphoneButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
