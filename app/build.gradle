@@ -28,6 +28,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'me.xdrop:fuzzywuzzy:1.1.10'
+    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     configurations.all {
         resolutionStrategy.force 'com.android.support:support-annotations:26.1.0'
     }
