@@ -198,20 +198,30 @@ public class MainActivity extends AppCompatActivity implements Main_RecyclerView
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            Scripture s = data.getParcelableExtra("Scripture");
-            if (scripture == null) {
-                scripture = s;
-            } else {
-                scriptureList.add(0, scripture);
-                scriptureAdapter.notifyItemInserted(0);
-                scripture = s;
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    Scripture s = data.getParcelableExtra("Scripture");
+                    if (scripture == null) {
+                        scripture = s;
+                    } else {
+                        scriptureList.add(0, scripture);
+                        scriptureAdapter.notifyItemInserted(0);
+                        scripture = s;
+                    }
+                    updateScriptureView();
+                    break;
+                case 1:
+                    scripture = data.getParcelableExtra("Scripture");
+                    updateScriptureView();
+                    break;
+                case 2:
+                    scripture = data.getParcelableExtra("Scripture");
+                    updateScriptureView();
+                    break;
+                default:
+                    break;
             }
-            updateScriptureView();
-        }
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            scripture = data.getParcelableExtra("Scripture");
-            updateScriptureView();
         } else {
             Log.e(TAG, "result code not okay");
         }

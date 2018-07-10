@@ -230,6 +230,7 @@ public class FITBActivity extends AppCompatActivity {
 
         if (size == 0) {
             endGame();
+            return;
         }
 
         //get all the buttons
