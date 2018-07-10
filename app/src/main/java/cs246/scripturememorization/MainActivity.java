@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements Main_RecyclerView
         menu.add(0, 0, 0, "Add a new Scripture to your list");
         menu.add(0, 1, 1, "Remove Current Scripture from your list");
         menu.add(0, 2, 2, "Recite Current Scripture");
+        menu.add(0, 3, 3, "Fill in the blank");
         return true;
     }
 
@@ -142,6 +143,10 @@ public class MainActivity extends AppCompatActivity implements Main_RecyclerView
                 return true;
             case 2:
                 reciteScripture();
+                return true;
+            case 3:
+                fitbScripture();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -176,6 +181,16 @@ public class MainActivity extends AppCompatActivity implements Main_RecyclerView
         Intent intent = new Intent(MainActivity.this, ReciteActivity.class);
         intent.putExtra("Scripture", scripture);
         startActivityForResult(intent, 1);
+    }
+
+    private void fitbScripture() {
+        if (scripture == null) {
+            Toast.makeText(MainActivity.this, "Please add a scripture to practice", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent intent = new Intent(MainActivity.this, FITBActivity.class);
+        intent.putExtra("Scripture", scripture);
+        startActivityForResult(intent, 2);
     }
 
     /*

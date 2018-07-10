@@ -7,4 +7,5 @@
     <string name="saveAndReturn">Save score and Return</string>
     <string name="fitb_title">Fill In The Blank</string>
     <string name="fitb_menu">How well do you know this scripture?</string>
+    <string name="fitb_endMessage">Well done, you\'ve passed off this scripture!</string>
 </resources>
